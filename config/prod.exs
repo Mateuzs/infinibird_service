@@ -4,6 +4,9 @@ config :infinibird_service, InfinibirdService.Endpoint,
   url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 80],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
   server: true
+  secret_key_base: "${SECRET_KEY_BASE}",
+  url: [host: "${APP_NAME}.gigalixirapp.com", port: 443],
+  cache_static_manifest: "priv/static/cache_manifest.json"
 
 config :infinibird_service, InfinibirdService.Repo,
   adapter: Ecto.Adapters.Postgres,
