@@ -10,6 +10,10 @@ defmodule InfinibirdService.InfinibirdRouter do
   plug(:match)
   plug(:dispatch)
 
+  if MIX_ENV == "prod" do
+    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
+  end
+
   get "/summary" do
     {:ok, data} = GenServer.call(@infinibird_server, {:get_summary_data})
 

@@ -9,6 +9,10 @@ defmodule InfinibirdService.TangoRouter do
   plug(:match)
   plug(:dispatch)
 
+  if MIX_ENV == "prod" do
+    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
+  end
+
   get "/data" do
     conn
     |> Plug.Conn.put_resp_content_type("application/json")
