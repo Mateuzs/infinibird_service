@@ -1,3 +1,5 @@
+use Mix.Config
+
 config :infinibird_service, InfinibirdService.Endpoint,
   load_from_system_env: true,
   # Needed for Phoenix 1.2 and 1.4. Doesn't hurt for 1.3.
