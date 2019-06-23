@@ -11,7 +11,7 @@ defmodule InfinibirdService.Endpoint do
 
   plug(:dispatch)
 
-  if Application.get_env(:my_app, :force_ssl) do
+  if MIX_ENV == "prod" do
     plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
   end
 
