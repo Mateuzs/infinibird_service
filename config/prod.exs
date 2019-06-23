@@ -19,6 +19,3 @@ config :infinibird_service, InfinibirdService.Repo,
 
 # Do not print debug messages in production
 config :logger, level: :info
-
-config :infinibird_service, InfinibirdService.Endpoint,
-  force_ssl: [rewrite_on: [:x_forwarded_proto]]
