@@ -1,14 +1,13 @@
 config :infinibird_service, InfinibirdService.Endpoint,
+  load_from_system_env: true,
+  # Needed for Phoenix 1.2 and 1.4. Doesn't hurt for 1.3.
+  http: [port: {:system, "PORT"}],
+  # Without this line, your app will not start the web server!
   server: true,
-  url: [scheme: "https", host: "infinibird-service.gigalixirapp.com", port: 443],
-  http: [compress: true, port: 80],
-  https: [
-    compress: true,
-    port: 443,
-    force_ssl: [hsts: true],
-    otp_app: :infinibird_service
-  ],
-  cache_static_manifest: "priv/static/manifest.json"
+  secret_key_base: "${SECRET_KEY_BASE}",
+  url: [host: "infinibird-service.gigalixirapp.com", port: 443],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  force_ssl: [hsts: true, host: nil]
 
 config :infinibird_service, InfinibirdService.Repo,
   adapter: Ecto.Adapters.Postgres,
