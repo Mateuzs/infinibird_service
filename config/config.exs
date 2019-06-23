@@ -11,7 +11,12 @@ use Mix.Config
 # You can configure your application as:
 #
 #     config :infinibird_service, key: :value
-#
+
+#  Configures the endpoint
+config :infinibird_service, InfinibirdService.Endpoint,
+  url: [host: "localhost"],
+  render_errors: [view: InfinibirdWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Infinibird.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :infinibird_service,
   infinibird_service_basic_auth_config: [
