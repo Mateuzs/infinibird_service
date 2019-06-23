@@ -1,0 +1,37 @@
+defmodule InfinibirdService.Endpoint do
+  use Plug.Router
+
+  plug(:match)
+
+  plug(Plug.Parsers,
+    parsers: [:json],
+    pass: ["application/json"],
+    json_decoder: Poison
+  )
+
+  plug(:dispatch)
+
+  forward("/infinibird", to: InfinibirdService.InfinibirdRouter)
+  forward("/tango", to: InfinibirdService.TangoRouter)
+
+  match "/health" do
+    conn
+    |> Plug.Conn.put_resp_content_type("application/json")
+    |> Plug.Conn.send_resp(401, ~s[{"message": "service is running",
+                                    "version": "#{Mix.Project.config()[:version]}"}])
+  end
+
+  match _ do
+    send_resp(conn, 404, "Requested page not found!")
+  end
+
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]}
+    }
+  end
+
+  def start_link(_opts),
+    do: Plug.Cowboy.http(__MODULE__, [], [])
+end
