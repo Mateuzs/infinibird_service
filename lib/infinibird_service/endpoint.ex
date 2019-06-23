@@ -1,6 +1,10 @@
 defmodule InfinibirdService.Endpoint do
   use Plug.Router
 
+  if System.get_env("MIX_ENV") === "prod" do
+    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
+  end
+
   plug(:match)
 
   plug(Plug.Parsers,
@@ -10,10 +14,6 @@ defmodule InfinibirdService.Endpoint do
   )
 
   plug(:dispatch)
-
-  if MIX_ENV == "prod" do
-    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
-  end
 
   forward("/infinibird", to: InfinibirdService.InfinibirdRouter)
   forward("/tango", to: InfinibirdService.TangoRouter)

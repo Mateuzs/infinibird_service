@@ -2,6 +2,10 @@ defmodule InfinibirdService.InfinibirdRouter do
   use Plug.Router
   @infinibird_server InfinibirdService.Constants.infinibird_server()
 
+  if System.get_env("MIX_ENV") === "prod" do
+    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
+  end
+
   plug(BasicAuth,
     use_config: {:infinibird_service, :infinibird_service_basic_auth_config},
     custom_response: &InfinibirdService.Authentication.unauthorized_response/1
@@ -9,10 +13,6 @@ defmodule InfinibirdService.InfinibirdRouter do
 
   plug(:match)
   plug(:dispatch)
-
-  if MIX_ENV == "prod" do
-    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
-  end
 
   get "/summary" do
     {:ok, data} = GenServer.call(@infinibird_server, {:get_summary_data})

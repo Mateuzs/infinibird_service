@@ -1,6 +1,10 @@
 defmodule InfinibirdService.TangoRouter do
   use Plug.Router
 
+  if System.get_env("MIX_ENV") === "prod" do
+    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
+  end
+
   plug(BasicAuth,
     use_config: {:infinibird_service, :infinibird_service_basic_auth_config},
     custom_response: &InfinibirdService.Authentication.unauthorized_response/1
@@ -8,10 +12,6 @@ defmodule InfinibirdService.TangoRouter do
 
   plug(:match)
   plug(:dispatch)
-
-  if MIX_ENV == "prod" do
-    plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
-  end
 
   get "/data" do
     conn
