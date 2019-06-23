@@ -11,10 +11,7 @@ defmodule InfinibirdService.InfinibirdRouter do
   plug(:dispatch)
 
   get "/summary" do
-    IO.puts("got request!")
     {:ok, data} = GenServer.call(@infinibird_server, {:get_summary_data})
-
-    IO.puts("sending response!")
 
     conn
     |> put_resp_content_type("application/json")

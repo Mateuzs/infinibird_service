@@ -17,11 +17,13 @@ defmodule InfinibirdService.Server do
   end
 
   def handle_call({:get_trip_data}, _from, state) do
-    {:ok, bson_data1} =
-      File.read(Path.absname("infinibird_service/lib/data/20190202T125015_20190202T142542.bson"))
+    trip1_path = Path.expand("./lib/infinibird_service/server/trip1.bson") |> Path.absname()
+    IO.puts(trip1_path)
+    {:ok, bson_data1} = File.read(trip1_path)
 
-    {:ok, bson_data2} =
-      File.read(Path.absname("infinibird_service/lib/data/20190329T170520_20190329T224221.bson"))
+    trip2_path = Path.expand("./lib/infinibird_service/server/trip2.bson") |> Path.absname()
+    IO.puts(trip2_path)
+    {:ok, bson_data2} = File.read(trip2_path)
 
     data = %{
       trip1: %{
