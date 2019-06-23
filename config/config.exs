@@ -13,14 +13,10 @@ use Mix.Config
 #     config :infinibird_service, key: :value
 
 #  Configures the endpoint
-
 config :infinibird_service, InfinibirdService.Endpoint,
-  load_from_system_env: true,
-  server: true,
-  secret_key_base: "${SECRET_KEY_BASE}",
-  url: [scheme: "https", host: "infinibird-service.gigalixirapp.com", port: 443],
-  cache_static_manifest: "priv/static/cache_manifest.json",
-  force_ssl: [rewrite_on: [:x_forwarded_proto], hsts: true, host: nil]
+  url: [host: "localhost"],
+  render_errors: [view: InfinibirdWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Infinibird.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :infinibird_service,
   infinibird_service_basic_auth_config: [
