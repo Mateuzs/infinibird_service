@@ -26,7 +26,7 @@ defmodule InfinibirdService.InfinibirdRouter do
     {:ok, data} = GenServer.call(@infinibird_server, {:get_trip_data})
 
     conn
-    |> put_resp_content_type("application/json")
+    |> put_resp_content_type("application/bson")
     |> send_resp(200, Bson.encode(data))
   end
 

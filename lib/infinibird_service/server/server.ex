@@ -49,27 +49,22 @@ defmodule InfinibirdService.Server do
         IO.puts(error)
         %{}
 
-      decoded_data ->
-        decoded_data
+      # for some reasons the decoder decodes list in reversed order, so we need to prepare it
+      [tables: data, device_id: device_id] ->
+        reversed_data =
+          data
+          |> Enum.map(fn {key, list} -> {key, Enum.reverse(list)} end)
+
+        Enum.reduce(reversed_data, %{device_id: device_id}, fn {key, list}, map ->
+          Map.put(map, key, list)
+        end)
     end
   end
 
   defp get_trip_points(data) do
-    trip =
-      decode_bson_data(data)
-      |> Map.get(:tables)
-      |> Map.get(:"/GPS_LOCATION")
-
-    Map.keys(trip)
-    |> Enum.map(fn key ->
-      {num, _rest} = Atom.to_string(key) |> Integer.parse()
-      num
-    end)
-    |> Enum.sort(&(&1 <= &2))
-    |> Enum.map(fn key -> Integer.to_string(key, 10) |> String.to_atom() end)
-    |> Enum.map(fn key ->
-      [Map.get(trip, key)[:lat], Map.get(trip, key)[:lon]]
-    end)
+    decode_bson_data(data)
+    |> Map.get(:"/GPS_LOCATION")
+    |> Enum.map(fn {_timestamp, list} -> [Keyword.get(list, :lat), Keyword.get(list, :lon)] end)
   end
 
   defp reply_success(data, reply, state) do

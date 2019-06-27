@@ -25,6 +25,10 @@ config :infinibird_service,
     realm: "Infinibird Area"
   ]
 
+config :remix,
+  escript: true,
+  silent: true
+
 # and access this configuration in your application as:
 #
 #     Application.get_env(:infinibird_service, :key)

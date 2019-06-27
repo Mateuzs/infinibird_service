@@ -1,6 +1,6 @@
 defmodule Bson.Decoder do
   defstruct new_doc:
-              Application.get_env(:bson, :decoder_new_doc, &Bson.Decoder.elist_to_atom_map/1),
+              Application.get_env(:bson, :decoder_new_doc, &Bson.Decoder.elist_to_keyword_list/1),
             new_bin: Application.get_env(:bson, :decoder_new_bin, &Bson.Bin.new/2)
 
   defmodule Error do
@@ -11,15 +11,14 @@ defmodule Bson.Decoder do
     end
   end
 
-  defdelegate elist_to_map(elist), to: :maps, as: :from_list
-
-  def elist_to_atom_map(elist) do
-    elist |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end) |> elist_to_map
+  def elist_to_keyword_list(elist) do
+    elist
+    |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
   end
 
-  def elist_to_hashdict(elist),
-    do: elist |> Enum.reduce(%HashDict{}, fn {k, v}, h -> HashDict.put(h, k, v) end)
-
+  # def elist_to_hashdict(elist) do
+  #   elist |> Enum.reduce(%HashDict{}, fn {k, v}, h -> HashDict.put(h, k, v) end)
+  # end
   def elist_to_keyword(elist), do: elist |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
 
   def identity(elist), do: elist

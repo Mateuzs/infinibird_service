@@ -4,7 +4,7 @@ defmodule InfinibirdService.MixProject do
   def project do
     [
       app: :infinibird_service,
-      version: "0.3.6",
+      version: "0.3.7",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -13,8 +13,14 @@ defmodule InfinibirdService.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
+    apps =
+      case Mix.env() do
+        :dev -> [:logger, :remix]
+        _env -> [:logger]
+      end
+
     [
-      extra_applications: [:logger],
+      extra_applications: apps,
       mod: {InfinibirdService.Application, []}
     ]
   end
@@ -25,7 +31,9 @@ defmodule InfinibirdService.MixProject do
       {:poison, "~> 3.0"},
       {:plug, "~> 1.6"},
       {:plug_cowboy, "~> 2.0.2"},
-      {:basic_auth, "~> 2.2.3"}
+      {:basic_auth, "~> 2.2.3"},
+      {:remix, "~> 0.0.1", only: :dev},
+      {:jason, "~> 1.0"}
     ]
   end
 end
