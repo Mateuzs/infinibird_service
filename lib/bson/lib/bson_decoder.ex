@@ -16,10 +16,8 @@ defmodule Bson.Decoder do
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
   end
 
-  # def elist_to_hashdict(elist) do
-  #   elist |> Enum.reduce(%HashDict{}, fn {k, v}, h -> HashDict.put(h, k, v) end)
-  # end
-  def elist_to_keyword(elist), do: elist |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+  def elist_to_keyword(elist),
+    do: elist |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
 
   def identity(elist), do: elist
 
@@ -45,7 +43,9 @@ defmodule Bson.Decoder do
       <<size::32-signed-little, rest::binary>> when restsize >= size and size > 4 ->
         case elist(rest, size - 5, opts) do
           %Error{} = error -> error
-          {<<0, rest::binary>>, list} -> {restsize - size, rest, list}
+          # if it's document fault and in the future it will be in normalorder
+          # then remove the Enum.reverse
+          {<<0, rest::binary>>, list} -> {restsize - size, rest, Enum.reverse(list)}
           {rest, doc} -> %Error{what: :"document trail", acc: doc, rest: {restsize - size, rest}}
         end
 

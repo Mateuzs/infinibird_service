@@ -2,6 +2,7 @@ defmodule InfinibirdService.Server do
   use GenServer
   alias InfinibirdService.{DataProvider, Constants}
   @infinibird_server Constants.infinibird_server()
+
   def start_link(state),
     do: GenServer.start_link(__MODULE__, state, name: @infinibird_server)
 
@@ -50,12 +51,8 @@ defmodule InfinibirdService.Server do
         %{}
 
       # for some reasons the decoder decodes list in reversed order, so we need to prepare it
-      [tables: data, device_id: device_id] ->
-        reversed_data =
-          data
-          |> Enum.map(fn {key, list} -> {key, Enum.reverse(list)} end)
-
-        Enum.reduce(reversed_data, %{device_id: device_id}, fn {key, list}, map ->
+      [device_id: device_id, tables: data] ->
+        Enum.reduce(data, %{device_id: device_id}, fn {key, list}, map ->
           Map.put(map, key, list)
         end)
     end
