@@ -1,4 +1,79 @@
 defmodule InfinibirdService.DataProvider do
+  def get_trip_data(data) do
+    decoded_data = decode_bson_data(data)
+
+    start_timestamp =
+      decoded_data
+      |> Map.get(:"/GPS_LOCATION")
+      |> List.first()
+      |> elem(1)
+      |> Keyword.get(:t)
+
+    end_timestamp =
+      decoded_data
+      |> Map.get(:"/GPS_LOCATION")
+      |> List.last()
+      |> elem(1)
+      |> Keyword.get(:t)
+
+    travel_time_minutes =
+      (DateTime.diff(
+         DateTime.from_unix!(end_timestamp, :millisecond),
+         DateTime.from_unix!(start_timestamp, :millisecond),
+         1
+       ) / 60)
+      |> Kernel.trunc()
+
+    start_time = format_time(start_timestamp)
+    end_time = format_time(end_timestamp)
+
+    points =
+      decoded_data
+      |> Map.get(:"/GPS_LOCATION")
+      |> Enum.map(fn {_timestamp, list} -> [Keyword.get(list, :lat), Keyword.get(list, :lon)] end)
+
+    distance_meters =
+      points
+      |> Enum.map(fn [lat, lon] -> {lon, lat} end)
+      |> Distance.GreatCircle.distance()
+      |> Kernel.trunc()
+
+    %{
+      name: start_time,
+      start_time: start_time,
+      end_time: end_time,
+      travel_time_minutes: travel_time_minutes,
+      distance_meters: distance_meters,
+      points: points
+    }
+  end
+
+  defp decode_bson_data(file) do
+    case Bson.decode(file) do
+      %Bson.Decoder.Error{} = error ->
+        IO.puts(error)
+        %{}
+
+      %Bson.Decoder.Error{what: :buffer_not_empty, acc: _doc, rest: _rest} = error ->
+        IO.puts(error)
+        %{}
+
+      # for some reasons the decoder decodes list in reversed order, so we need to prepare it
+      [device_id: device_id, tables: data] ->
+        Enum.reduce(data, %{device_id: device_id}, fn {key, list}, map ->
+          Map.put(map, key, list)
+        end)
+    end
+  end
+
+  defp format_time(time) do
+    time
+    |> DateTime.from_unix!(:millisecond)
+    |> DateTime.to_string()
+    |> String.split(".")
+    |> List.first()
+  end
+
   def get_chart_mock_data(),
     do: %{
       pie_chart_data: [
