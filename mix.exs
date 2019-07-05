@@ -4,7 +4,7 @@ defmodule InfinibirdService.MixProject do
   def project do
     [
       app: :infinibird_service,
-      version: "0.3.7",
+      version: "0.1.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -33,7 +33,8 @@ defmodule InfinibirdService.MixProject do
       {:plug_cowboy, "~> 2.0.2"},
       {:basic_auth, "~> 2.2.3"},
       {:remix, "~> 0.0.1", only: :dev},
-      {:jason, "~> 1.0"}
+      {:jason, "~> 1.0"},
+      {:distance, "~> 0.2.2"}
     ]
   end
 end

@@ -24,45 +24,15 @@ defmodule InfinibirdService.Server do
     trip2_path = Path.expand("./lib/data/20190329T170520_20190329T224221.bson") |> Path.absname()
     {:ok, bson_data2} = File.read(trip2_path)
 
-    data = %{
-      trip1: %{
-        name: "Trasa 1",
-        points: get_trip_points(bson_data1)
-      },
-      trip2: %{
-        name: "Trasa 2",
-        points: get_trip_points(bson_data2)
-      }
-    }
+    data = [
+      trip1: DataProvider.get_trip_data(bson_data1),
+      trip2: DataProvider.get_trip_data(bson_data2)
+    ]
 
     reply_success(data, :ok, state)
   end
 
   ############### HELPERS  ###############
-
-  defp decode_bson_data(file) do
-    case Bson.decode(file) do
-      %Bson.Decoder.Error{} = error ->
-        IO.puts(error)
-        %{}
-
-      %Bson.Decoder.Error{what: :buffer_not_empty, acc: _doc, rest: _rest} = error ->
-        IO.puts(error)
-        %{}
-
-      # for some reasons the decoder decodes list in reversed order, so we need to prepare it
-      [device_id: device_id, tables: data] ->
-        Enum.reduce(data, %{device_id: device_id}, fn {key, list}, map ->
-          Map.put(map, key, list)
-        end)
-    end
-  end
-
-  defp get_trip_points(data) do
-    decode_bson_data(data)
-    |> Map.get(:"/GPS_LOCATION")
-    |> Enum.map(fn {_timestamp, list} -> [Keyword.get(list, :lat), Keyword.get(list, :lon)] end)
-  end
 
   defp reply_success(data, reply, state) do
     {:reply, {reply, data}, state}
