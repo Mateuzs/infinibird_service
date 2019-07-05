@@ -4,7 +4,7 @@ defmodule InfinibirdService.MixProject do
   def project do
     [
       app: :infinibird_service,
-      version: "0.3.7",
+      version: "0.1.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps()
