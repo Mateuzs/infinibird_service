@@ -1,5 +1,6 @@
 defmodule InfinibirdService.TangoRouter do
   use Plug.Router
+  alias InfinibirdService.TangoController
 
   if System.get_env("MIX_ENV") === "prod" do
     plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
@@ -13,10 +14,12 @@ defmodule InfinibirdService.TangoRouter do
   plug(:match)
   plug(:dispatch)
 
-  get "/data" do
+  get "/new-trip/:device_id" do
+    token = TangoController.handle_new_trip("#{device_id}")
+
     conn
     |> Plug.Conn.put_resp_content_type("application/json")
-    |> Plug.Conn.send_resp(200, ~s[{"message": "Tango response"}])
+    |> Plug.Conn.send_resp(200, ~s[{"token": "#{token}"}])
   end
 
   get _ do

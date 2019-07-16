@@ -1,6 +1,6 @@
 defmodule InfinibirdService.InfinibirdRouter do
   use Plug.Router
-  @infinibird_server InfinibirdService.Constants.infinibird_server()
+  alias InfinibirdService.InfinibirdController
 
   if System.get_env("MIX_ENV") === "prod" do
     plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
@@ -15,7 +15,7 @@ defmodule InfinibirdService.InfinibirdRouter do
   plug(:dispatch)
 
   get "/summary" do
-    {:ok, data} = GenServer.call(@infinibird_server, {:get_summary_data})
+    data = InfinibirdController.get_summary_data()
 
     conn
     |> put_resp_content_type("application/json")
@@ -23,7 +23,7 @@ defmodule InfinibirdService.InfinibirdRouter do
   end
 
   get "/trips" do
-    {:ok, data} = GenServer.call(@infinibird_server, {:get_trip_data})
+    data = InfinibirdController.get_trip_data()
 
     conn
     |> put_resp_content_type("application/bson")
