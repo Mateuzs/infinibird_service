@@ -23,7 +23,7 @@ defmodule InfinibirdService.InfinibirdRouter do
   end
 
   get "/trips" do
-    data = InfinibirdController.get_trip_data()
+    data = InfinibirdService.NewDataProvider.get_data("9bac2143-3f85-44f6-ad56-b575549af9e4")
 
     conn
     |> put_resp_content_type("application/bson")

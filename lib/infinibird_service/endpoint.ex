@@ -29,9 +29,13 @@ defmodule InfinibirdService.Endpoint do
   match "/test/:device_id" do
     result = NewDataProvider.get_data(device_id)
 
+    IO.inspect(InfinibirdService.Benchmark.measure(fn -> Jason.encode(result) end))
+    IO.inspect(InfinibirdService.Benchmark.measure(fn -> Poison.encode(result) end))
+    IO.inspect(InfinibirdService.Benchmark.measure(fn -> Bson.encode(result) end))
+
     conn
     |> Plug.Conn.put_resp_content_type("application/json")
-    |> Plug.Conn.send_resp(401, Jason.encode!(result))
+    |> Plug.Conn.send_resp(401, Poison.encode!(result))
   end
 
   match _ do
