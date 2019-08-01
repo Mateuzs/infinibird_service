@@ -26,18 +26,6 @@ defmodule InfinibirdService.Endpoint do
                                     "version": "#{Mix.Project.config()[:version]}"}])
   end
 
-  match "/test/:device_id" do
-    result = NewDataProvider.get_data(device_id)
-
-    IO.inspect(InfinibirdService.Benchmark.measure(fn -> Jason.encode(result) end))
-    IO.inspect(InfinibirdService.Benchmark.measure(fn -> Poison.encode(result) end))
-    IO.inspect(InfinibirdService.Benchmark.measure(fn -> Bson.encode(result) end))
-
-    conn
-    |> Plug.Conn.put_resp_content_type("application/json")
-    |> Plug.Conn.send_resp(401, Poison.encode!(result))
-  end
-
   match _ do
     send_resp(conn, 404, "Requested page not found!")
   end

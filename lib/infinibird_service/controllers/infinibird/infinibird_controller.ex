@@ -1,5 +1,6 @@
 defmodule InfinibirdService.InfinibirdController do
   alias InfinibirdService.DataProvider
+  alias InfinibirdService.RideDataExtractors
 
   def get_summary_data() do
     summary = DataProvider.get_summary_mock_data()
@@ -8,18 +9,32 @@ defmodule InfinibirdService.InfinibirdController do
     %{charts: charts, summary: summary}
   end
 
-  def get_trip_data() do
-    trip1_path = Path.expand("./lib/data/20190202T125015_20190202T142542.bson") |> Path.absname()
-    {:ok, bson_data1} = File.read(trip1_path)
+  def get_rides_data(device_id) do
+    ride_files =
+      Path.expand("./lib/rides/#{device_id}/maneuvers/")
+      |> Path.absname()
+      |> File.ls!()
 
-    trip2_path = Path.expand("./lib/data/20190329T170520_20190329T224221.bson") |> Path.absname()
-    {:ok, bson_data2} = File.read(trip2_path)
+    rides =
+      Enum.map(ride_files, fn ride_file ->
+        ride = RideDataExtractors.extract_ride(device_id, ride_file)
+        start_time = RideDataExtractors.extract_start_time(ride)
+        end_time = RideDataExtractors.extract_end_time(ride)
+        travel_time_minutes = RideDataExtractors.count_travel_time_minutes(ride)
+        points = RideDataExtractors.extract_travel_points(ride)
+        distance_meters = RideDataExtractors.count_distance_meters(points)
 
-    data = [
-      trip1: DataProvider.get_trip_data(bson_data1),
-      trip2: DataProvider.get_trip_data(bson_data2)
-    ]
+        {:"ride#{Enum.find_index(ride_files, &(&1 === ride_file))}",
+         %{
+           name: start_time,
+           distance_meters: distance_meters,
+           travel_time_minutes: travel_time_minutes,
+           start_time: start_time,
+           end_time: end_time,
+           points: points
+         }}
+      end)
 
-    data
+    rides
   end
 end
