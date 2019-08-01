@@ -1,6 +1,5 @@
 defmodule InfinibirdService.Endpoint do
   use Plug.Router
-  alias InfinibirdService.NewDataProvider
 
   if System.get_env("MIX_ENV") === "prod" do
     plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
