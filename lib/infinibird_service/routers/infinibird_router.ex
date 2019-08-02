@@ -24,6 +24,7 @@ defmodule InfinibirdService.InfinibirdRouter do
 
   get "/trips" do
     data = InfinibirdController.get_rides_data("9bac2143-3f85-44f6-ad56-b575549af9e4")
+    IO.inspect(data)
 
     conn
     |> put_resp_content_type("application/bson")

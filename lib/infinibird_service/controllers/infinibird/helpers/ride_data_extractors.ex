@@ -26,22 +26,18 @@ defmodule InfinibirdService.RideDataExtractors do
     Enum.filter(ride, fn maneuver -> Map.get(maneuver, "beginningGpsPosition") !== nil end)
     |> Enum.map(fn maneuver ->
       [
-        [
-          get_in(maneuver, ["beginningGpsPosition", "latitude"]),
-          get_in(maneuver, ["beginningGpsPosition", "longitude"])
-        ],
-        [
-          get_in(maneuver, ["endGpsPosition", "latitude"]),
-          get_in(maneuver, ["endGpsPosition", "longitude"])
-        ]
+        lat: get_in(maneuver, ["beginningGpsPosition", "latitude"]),
+        lon: get_in(maneuver, ["beginningGpsPosition", "longitude"]),
+        alt: get_in(maneuver, ["beginningGpsPosition", "altitude"]),
+        mps: get_in(maneuver, ["beginningGpsPosition", "speedInMps"]),
+        tim: extract_time(get_in(maneuver, ["beginningGpsPosition", "timestamp"]))
       ]
     end)
-    |> Enum.flat_map(fn [[a, b], [c, d]] -> [[a, b], [c, d]] end)
   end
 
   def count_distance_meters(points) do
     points
-    |> Enum.map(fn [lat, lon] -> {lon, lat} end)
+    |> Enum.map(fn list -> {Keyword.get(list, :lon), Keyword.get(list, :lat)} end)
     |> Distance.GreatCircle.distance()
     |> Kernel.trunc()
   end
@@ -61,5 +57,51 @@ defmodule InfinibirdService.RideDataExtractors do
        :second
      ) / 60)
     |> Kernel.trunc()
+  end
+
+  def count_decelerations(ride) do
+    ride
+    |> Enum.count(fn e ->
+      e["maneuverType"] === "deceleration" ||
+        e["maneuverType"] === "decelerationFollowedByAcceleration"
+    end)
+  end
+
+  def count_accelerations(ride) do
+    ride
+    |> Enum.count(fn e ->
+      e["maneuverType"] === "acceleration" ||
+        e["maneuverType"] === "accelerationFollowedByDeceleration"
+    end)
+  end
+
+  def count_stoppings(ride) do
+    ride
+    |> Enum.count(fn e -> e["maneuverType"] === "stopping" end)
+  end
+
+  def count_left_turns(ride) do
+    ride
+    |> Enum.count(fn e -> e["maneuverType"] === "leftTurn" end)
+  end
+
+  def count_right_turns(ride) do
+    ride
+    |> Enum.count(fn e -> e["maneuverType"] === "rightTurn" end)
+  end
+
+  def find_max_speed(ride) do
+    ride
+    |> Enum.filter(fn maneuver -> Map.get(maneuver, "beginningGpsPosition") !== nil end)
+    |> Enum.max_by(fn e -> get_in(e, ["beginningGpsPosition", "speedInMps"]) end)
+    |> get_in(["beginningGpsPosition", "speedInMps"])
+  end
+
+  defp extract_time(timestamp) do
+    timestamp
+    |> String.split(".")
+    |> List.first()
+    |> String.split("T")
+    |> List.last()
   end
 end
