@@ -18,7 +18,7 @@ defmodule InfinibirdService.InfinibirdRouter do
     data = InfinibirdController.get_summary_data()
 
     conn
-    |> put_resp_content_type("application/json")
+    |> put_resp_content_type("application/bson")
     |> send_resp(200, Bson.encode(data))
   end
 
