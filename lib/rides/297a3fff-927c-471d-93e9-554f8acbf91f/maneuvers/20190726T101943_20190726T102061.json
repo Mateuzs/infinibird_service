@@ -1,0 +1,170 @@
+[
+  {
+    "maneuverType": "stop",
+    "timeRange": {
+      "beginning": "2019-07-26T10:19:19.434+02:00",
+      "end": "2019-07-26T10:19:21.546+02:00"
+    },
+    "beginningGpsPosition": {
+      "timestamp": "2019-07-26T10:19:19.434+02:00",
+      "locationFixTimeInMs": 1564129158891,
+      "latitude": 49.97103568412093,
+      "longitude": 19.881057108925308,
+      "altitude": 401.4327821072347,
+      "speedInMps": 0.087105274,
+      "bearingInDeg": 188.66962,
+      "horizontalAccuracy": 16.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 0
+    },
+    "endGpsPosition": {
+      "timestamp": "2019-07-26T10:19:21.546+02:00",
+      "locationFixTimeInMs": 1564129160887,
+      "latitude": 49.97104949957134,
+      "longitude": 19.881067901888027,
+      "altitude": 390.18246979038014,
+      "speedInMps": 0.09148718,
+      "bearingInDeg": 323.3243,
+      "horizontalAccuracy": 12.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 8
+    },
+    "beginningSpeedInMps": 0.08710527420043945,
+    "endSpeedInMps": 0.09148717671632767,
+    "maxSpeedInMps": 0.33995649218559265,
+    "minSpeedInMps": 0.08710527420043945,
+    "version": 2
+  },
+  {
+    "maneuverType": "stop",
+    "timeRange": {
+      "beginning": "2019-07-26T10:19:21.546+02:00",
+      "end": "2019-07-26T10:19:23.615+02:00"
+    },
+    "beginningGpsPosition": {
+      "timestamp": "2019-07-26T10:19:21.546+02:00",
+      "locationFixTimeInMs": 1564129160887,
+      "latitude": 49.97104949957134,
+      "longitude": 19.881067901888027,
+      "altitude": 390.18246979038014,
+      "speedInMps": 0.09148718,
+      "bearingInDeg": 323.3243,
+      "horizontalAccuracy": 12.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 8
+    },
+    "endGpsPosition": {
+      "timestamp": "2019-07-26T10:19:23.615+02:00",
+      "locationFixTimeInMs": 1564129162892,
+      "latitude": 49.97105009353489,
+      "longitude": 19.881075524823192,
+      "altitude": 386.21235596423327,
+      "speedInMps": 0.091418326,
+      "bearingInDeg": 284.6894,
+      "horizontalAccuracy": 12.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 12
+    },
+    "beginningSpeedInMps": 0.09148717671632767,
+    "endSpeedInMps": 0.0914183259010315,
+    "maxSpeedInMps": 0.11687980592250824,
+    "minSpeedInMps": 0.0914183259010315,
+    "version": 2
+  },
+  {
+    "maneuverType": "stop",
+    "timeRange": {
+      "beginning": "2019-07-26T10:20:32.623+02:00",
+      "end": "2019-07-26T10:20:32.623+02:00"
+    },
+    "beginningGpsPosition": {
+      "timestamp": "2019-07-26T10:20:32.623+02:00",
+      "locationFixTimeInMs": 1564129232000,
+      "latitude": 49.97115583096374,
+      "longitude": 19.88107713805853,
+      "altitude": 375.75920445810516,
+      "speedInMps": 1.7264886,
+      "bearingInDeg": 0.48223206,
+      "horizontalAccuracy": 4.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 25
+    },
+    "endGpsPosition": {
+      "timestamp": "2019-07-26T10:20:32.623+02:00",
+      "locationFixTimeInMs": 1564129232000,
+      "latitude": 49.97115583096374,
+      "longitude": 19.88107713805853,
+      "altitude": 375.75920445810516,
+      "speedInMps": 1.7264886,
+      "bearingInDeg": 0.48223206,
+      "horizontalAccuracy": 4.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 25
+    },
+    "beginningSpeedInMps": 1.7264885902404785,
+    "endSpeedInMps": 1.7264885902404785,
+    "maxSpeedInMps": 1.7264885902404785,
+    "minSpeedInMps": 1.7264885902404785,
+    "version": 2
+  },
+  {
+    "maneuverType": "starting",
+    "timeRange": {
+      "beginning": "2019-07-26T10:20:32.623+02:00",
+      "end": "2019-07-26T10:20:39.616+02:00"
+    },
+    "version": 1
+  },
+  {
+    "maneuverType": "acceleration",
+    "timeRange": {
+      "beginning": "2019-07-26T10:20:32.623+02:00",
+      "end": "2019-07-26T10:20:39.616+02:00"
+    },
+    "beginningGpsPosition": {
+      "timestamp": "2019-07-26T10:20:32.623+02:00",
+      "locationFixTimeInMs": 1564129232000,
+      "latitude": 49.97115583096374,
+      "longitude": 19.88107713805853,
+      "altitude": 375.75920445810516,
+      "speedInMps": 1.7264886,
+      "bearingInDeg": 0.48223206,
+      "horizontalAccuracy": 4.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 25
+    },
+    "endGpsPosition": {
+      "timestamp": "2019-07-26T10:20:39.616+02:00",
+      "locationFixTimeInMs": 1564129239000,
+      "latitude": 49.97148855202412,
+      "longitude": 19.8810806924343,
+      "altitude": 376.68113156464324,
+      "speedInMps": 5.014219,
+      "bearingInDeg": 0.83905,
+      "horizontalAccuracy": 4.0,
+      "verticalAccuracy": 0.0,
+      "speedAccuracy": 0.0,
+      "bearingAccuracy": 0.0,
+      "numberOfSatellites": 26
+    },
+    "beginningSpeedInMps": 1.7264885902404785,
+    "endSpeedInMps": 5.014218807220459,
+    "maxSpeedInMps": 5.13775634765625,
+    "minSpeedInMps": 1.7264885902404785,
+    "version": 2
+  }
+]

@@ -4,7 +4,7 @@ defmodule InfinibirdService.MixProject do
   def project do
     [
       app: :infinibird_service,
-      version: "0.1.1",
+      version: "0.1.2",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -28,7 +28,7 @@ defmodule InfinibirdService.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poison, "~> 3.0"},
+      {:poison, "~> 4.0"},
       {:plug, "~> 1.6"},
       {:plug_cowboy, "~> 2.0.2"},
       {:basic_auth, "~> 2.2.3"},
