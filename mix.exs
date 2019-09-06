@@ -34,7 +34,9 @@ defmodule InfinibirdService.MixProject do
       {:basic_auth, "~> 2.2.3"},
       {:remix, "~> 0.0.1", only: :dev},
       {:jason, "~> 1.0"},
-      {:distance, "~> 0.2.2"}
+      {:distance, "~> 0.2.2"},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 end
