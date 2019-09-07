@@ -11,7 +11,7 @@ defmodule InfinibirdService.Application do
   defp children do
     [
       InfinibirdService.Endpoint,
-      Infinibird.Repo
+      InfinibirdDB.Repo
     ]
   end
 

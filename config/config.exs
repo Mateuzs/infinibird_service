@@ -34,6 +34,9 @@ config :infinibird_service,
 #     config :logger, level: :info
 #
 
-#config Ecto repos
-config :infinibird_service, ecto_repos: [Infinibird.Repo]
+# config Ecto repos
+config :infinibird_service, ecto_repos: [InfinibirdDB.Repo]
 
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env()}.exs"
