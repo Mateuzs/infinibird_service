@@ -1,9 +1,8 @@
-defmodule InfinibirdDB.Users do
+defmodule InfinibirdDB.User do
   use Ecto.Schema
-  import Ecto.Changeset
 
+  @primary_key {:device_id, :string, []}
   schema "users" do
-    field(:device_id, :string, primary_key: true)
     field(:token, :string)
 
     has_many(:ride_metrics, InfinibirdDB.RideMetrics)

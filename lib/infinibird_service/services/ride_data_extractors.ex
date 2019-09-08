@@ -97,6 +97,75 @@ defmodule InfinibirdService.RideDataExtractors do
     |> get_in(["beginningGpsPosition", "speedInMps"])
   end
 
+  def count_speed_profile(ride) do
+    Enum.filter(ride, fn maneuver ->
+      Map.get(maneuver, "beginningGpsPosition") !== nil
+    end)
+    |> Enum.reduce(
+      {0, 0, 0, 0, 0, 0},
+      fn maneuver,
+         {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
+          distance_in_speed_75_100, distance_in_speed_100_125, distance_in_speed_over_125} ->
+        beginning_time = get_in(maneuver, ["beginningGpsPosition", "timestamp"])
+        end_time = get_in(maneuver, ["endGpsPosition", "timestamp"])
+
+        seconds =
+          DateTime.diff(
+            DateTime.from_iso8601(end_time) |> elem(1),
+            DateTime.from_iso8601(beginning_time) |> elem(1),
+            :second
+          )
+
+        distance_meters =
+          [
+            {get_in(maneuver, ["beginningGpsPosition", "longitude"]),
+             get_in(maneuver, ["beginningGpsPosition", "latitude"])},
+            {get_in(maneuver, ["endGpsPosition", "longitude"]),
+             get_in(maneuver, ["endGpsPosition", "latitude"])}
+          ]
+          |> Distance.GreatCircle.distance()
+
+        avg_speed_ms =
+          case seconds do
+            0 -> 0
+            _more_than_0 -> distance_meters / seconds
+          end
+
+        case avg_speed_ms * 3.6 do
+          speed when speed < 25 ->
+            {distance_in_speed_0_25 + distance_meters, distance_in_speed_25_50,
+             distance_in_speed_50_75, distance_in_speed_75_100, distance_in_speed_100_125,
+             distance_in_speed_over_125}
+
+          speed when speed < 50 ->
+            {distance_in_speed_0_25, distance_in_speed_25_50 + distance_meters,
+             distance_in_speed_50_75, distance_in_speed_75_100, distance_in_speed_100_125,
+             distance_in_speed_over_125}
+
+          speed when speed < 75 ->
+            {distance_in_speed_0_25, distance_in_speed_25_50,
+             distance_in_speed_50_75 + distance_meters, distance_in_speed_75_100,
+             distance_in_speed_100_125, distance_in_speed_over_125}
+
+          speed when speed < 100 ->
+            {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
+             distance_in_speed_75_100 + distance_meters, distance_in_speed_100_125,
+             distance_in_speed_over_125}
+
+          speed when speed < 125 ->
+            {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
+             distance_in_speed_75_100, distance_in_speed_100_125 + distance_meters,
+             distance_in_speed_over_125}
+
+          speed ->
+            {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
+             distance_in_speed_75_100, distance_in_speed_100_125,
+             distance_in_speed_over_125 + distance_meters}
+        end
+      end
+    )
+  end
+
   defp extract_time(timestamp) do
     timestamp
     |> String.split(".")

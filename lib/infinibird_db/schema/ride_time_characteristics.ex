@@ -1,6 +1,5 @@
 defmodule InfinibirdDB.RideTimeCharacteristics do
   use Ecto.Schema
-  import Ecto.Changeset
 
   schema "ride_time_characteristics" do
     field(:ride_time_characteristics_id, :id, primary_key: true)
