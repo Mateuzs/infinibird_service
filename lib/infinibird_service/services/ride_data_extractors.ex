@@ -97,6 +97,13 @@ defmodule InfinibirdService.RideDataExtractors do
     |> get_in(["beginningGpsPosition", "speedInMps"])
   end
 
+  def get_avg_speed_kmh(travel_time_minutes) do
+    case travel_time_minutes do
+      0 -> 0
+      _more_than_0 -> (distance_meters / 1000 / (travel_time_minutes / 60)) |> Kernel.trunc()
+    end
+  end
+
   def count_speed_profile(ride) do
     Enum.filter(ride, fn maneuver ->
       Map.get(maneuver, "beginningGpsPosition") !== nil
@@ -164,6 +171,77 @@ defmodule InfinibirdService.RideDataExtractors do
         end
       end
     )
+  end
+
+  def get_day_of_week(ride) do
+    day_of_week =
+      List.first(ride)
+      |> get_in(["timeRange", "beginning"])
+      |> Date.from_iso8601!()
+      |> Date.day_of_week()
+
+    case day_of_week do
+      1 -> "monday"
+      2 -> "tuesday"
+      3 -> "wednesday"
+      4 -> "thursday"
+      5 -> "friday"
+      6 -> "saturday"
+      7 -> "sunday"
+    end
+  end
+
+  def get_time_of_day(ride) do
+    time =
+      List.first(ride)
+      |> get_in(["timeRange", "beginning"])
+      |> Time.from_iso8601!()
+
+    case time.hour do
+      hour when hour < 6 -> "night"
+      hour when hour < 11 -> "morning"
+      hour when hour < 13 -> "midday"
+      hour when hour < 18 -> "afternoon"
+      hour when hour < 23 -> "evening"
+      hour -> "night"
+    end
+  end
+
+  def get_month_of_year do
+    date =
+      List.first(ride)
+      |> get_in(["timeRange", "beginning"])
+      |> Date.from_iso8601!()
+
+    case date.month do
+      1 -> "january"
+      2 -> "february"
+      3 -> "march"
+      4 -> "april"
+      5 -> "may"
+      6 -> "june"
+      7 -> "july"
+      8 -> "august"
+      9 -> "september"
+      10 -> "october"
+      11 -> "november"
+      12 -> "december"
+    end
+  end
+
+  def get_season(ride) do
+    date =
+      List.first(ride)
+      |> get_in(["timeRange", "beginning"])
+      |> Date.from_iso8601!()
+
+    case date.month do
+      month when month < 3 -> "winter"
+      month when month < 6 -> "spring"
+      month when month < 9 -> "summer"
+      month when month < 12 -> "autumn"
+      month -> "winter"
+    end
   end
 
   defp extract_time(timestamp) do

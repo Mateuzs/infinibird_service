@@ -1,6 +1,6 @@
 defmodule InfinibirdService.InfinibirdRouter do
   use Plug.Router
-  alias InfinibirdService.InfinibirdController
+  alias InfinibirdService.RideHandler
 
   if System.get_env("MIX_ENV") === "prod" do
     plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
@@ -15,15 +15,18 @@ defmodule InfinibirdService.InfinibirdRouter do
   plug(:dispatch)
 
   get "/summary" do
-    data = InfinibirdController.get_summary_data()
+    data = RideInfinibirdService.RideHandler.get_summary_data()
 
     conn
     |> put_resp_content_type("application/bson")
     |> send_resp(200, Bson.encode(data))
   end
 
-  get "/trips" do
-    data = InfinibirdController.get_rides_data("9bac2143-3f85-44f6-ad56-b575549af9e4")
+  get "/trips/:deviceId" do
+    data =
+      RideInfinibirdService.RideHandler.get_user_rides_data(
+        deviceId
+      )
 
     conn
     |> put_resp_content_type("application/bson")
