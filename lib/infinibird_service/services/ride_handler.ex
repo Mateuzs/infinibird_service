@@ -1,7 +1,7 @@
 defmodule InfinibirdService.RideHandler do
   import Ecto.Query
-  alias InfinibirdDB.{RideMetrics, Repo}
-  alias InfinibirdService.RideDataExtractors
+  alias InfinibirdDB.{RideMetrics, RideTimeCharacteristics, Repo}
+  alias InfinibirdService.{RideDataExtractors, DataProvider}
 
   def process_new_ride(device_id, ride_id) do
     # Ride Metrics
@@ -17,7 +17,7 @@ defmodule InfinibirdService.RideHandler do
     max_speed_kmh = Kernel.trunc(RideDataExtractors.find_max_speed(ride) * 3.6)
     points = RideDataExtractors.extract_travel_points(ride)
     distance_meters = RideDataExtractors.count_distance_meters(points)
-    avg_speed_kmh = RideDataExtractor.get_avg_speed_kmh(travel_time_minutes)
+    avg_speed_kmh = RideDataExtractors.get_avg_speed_kmh(distance_meters, travel_time_minutes)
 
     {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
      distance_in_speed_75_100, distance_in_speed_100_125,
@@ -26,14 +26,15 @@ defmodule InfinibirdService.RideHandler do
     # Ride Time Charcetristics
     day_of_week = RideDataExtractors.get_day_of_week(ride)
     month_of_year = RideDataExtractors.get_month_of_year(ride)
-    time_of_day = RideDataExtractor.get_time_of_day(ride)
+    time_of_day = RideDataExtractors.get_time_of_day(ride)
     season = RideDataExtractors.get_season(ride)
- 
+
     # debugging purposes
     IO.inspect(
       {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
        distance_in_speed_75_100, distance_in_speed_100_125, distance_in_speed_over_125}
     )
+
     IO.inspect(distance_meters)
 
     ride_metrics_id =
@@ -60,22 +61,18 @@ defmodule InfinibirdService.RideHandler do
         returning: [:ride_metrics_id]
       )
 
-    Repo.insert(
-      %RideTimeCharacteristics{
-        ride_metrics_id: ride_metrics_id,
-        date: date,
-        time: time,
-        day: day_of_week,
-        month: month_of_yearm
-        time_of_day: time_of_day,
-        season: season
-      }
-    )
+    Repo.insert(%RideTimeCharacteristics{
+      ride_metrics_id: ride_metrics_id,
+      date: date,
+      time: time,
+      day: day_of_week,
+      month: month_of_year,
+      time_of_day: time_of_day,
+      season: season
+    })
 
     IO.inspect(ride_metrics_id)
   end
-
-
 
   def get_user_rides_data(device_id) do
     ride_files =

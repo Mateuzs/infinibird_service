@@ -10,7 +10,9 @@ defmodule InfinibirdService.TokenHandler do
     case user do
       nil ->
         token = generate_token(device_id)
-        Repo.insert(%User{device_id: device_id, token: token})
+        [argon_salt: argon_salt] = Application.get_env(:infinibird_service, :argon)
+        hashed_password = Argon2.Base.hash_password(token, argon_salt, format: :raw_hash)
+        Repo.insert(%User{device_id: device_id, token: token, password: hashed_password})
 
         token
 

@@ -7,7 +7,8 @@ defmodule Infinibird.Repo.Migrations.CreateRideTimeCharacteristics do
 
       add(
         :ride_metrics_id,
-        references(:ride_metrics, column: :ride_metrics_id, on_delete: :delete_all)
+        references(:ride_metrics, column: :ride_metrics_id, type: :serial, on_delete: :delete_all),
+        null: false
       )
 
       add(:date, :date, null: false)

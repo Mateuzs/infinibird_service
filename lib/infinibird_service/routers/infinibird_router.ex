@@ -1,6 +1,7 @@
 defmodule InfinibirdService.InfinibirdRouter do
   use Plug.Router
   alias InfinibirdService.RideHandler
+  alias InfinibirdService.AuthService
 
   if System.get_env("MIX_ENV") === "prod" do
     plug(Plug.SSL, rewrite_on: [:x_forwarded_proto], host: nil)
@@ -15,7 +16,7 @@ defmodule InfinibirdService.InfinibirdRouter do
   plug(:dispatch)
 
   get "/summary" do
-    data = RideInfinibirdService.RideHandler.get_summary_data()
+    data = RideHandler.get_summary_data()
 
     conn
     |> put_resp_content_type("application/bson")
@@ -23,14 +24,27 @@ defmodule InfinibirdService.InfinibirdRouter do
   end
 
   get "/trips/:deviceId" do
-    data =
-      RideInfinibirdService.RideHandler.get_user_rides_data(
-        deviceId
-      )
+    data = RideHandler.get_user_rides_data(deviceId)
 
     conn
     |> put_resp_content_type("application/bson")
     |> send_resp(200, Bson.encode(data))
+  end
+
+  post "/authorise" do
+    IO.inspect(conn.body_params)
+
+    case AuthService.authorise_user(conn.body_params) do
+      %{authorised: false} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(200, ~s[{"authorised": false}])
+
+      %{authorised: true} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(200, ~s[{"authorised": true}])
+    end
   end
 
   get _ do

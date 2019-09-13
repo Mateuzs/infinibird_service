@@ -40,3 +40,5 @@ config :infinibird_service, ecto_repos: [InfinibirdDB.Repo]
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+
+config :infinibird_service, :argon, argon_salt: "J+pwEEoGNeHnBfgB"

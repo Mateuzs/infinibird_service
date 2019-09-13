@@ -20,7 +20,9 @@ defmodule InfinibirdDB.RideMetrics do
     field(:distance_on_speed_between_100_and_125_kmh, :integer)
     field(:distance_on_speed_over_125_kmh, :integer)
 
-    has_one(:ride_time_characteristics, InfinibirdDB.RideTimeCharacteristics)
+    has_one(:ride_time_characteristics, InfinibirdDB.RideTimeCharacteristics,
+      foreign_key: :ride_metrics_id
+    )
 
     belongs_to(:user, InfinibirdDB.User, references: :device_id)
   end

@@ -97,7 +97,7 @@ defmodule InfinibirdService.RideDataExtractors do
     |> get_in(["beginningGpsPosition", "speedInMps"])
   end
 
-  def get_avg_speed_kmh(travel_time_minutes) do
+  def get_avg_speed_kmh(distance_meters, travel_time_minutes) do
     case travel_time_minutes do
       0 -> 0
       _more_than_0 -> (distance_meters / 1000 / (travel_time_minutes / 60)) |> Kernel.trunc()
@@ -164,7 +164,7 @@ defmodule InfinibirdService.RideDataExtractors do
              distance_in_speed_75_100, distance_in_speed_100_125 + distance_meters,
              distance_in_speed_over_125}
 
-          speed ->
+          _speed ->
             {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
              distance_in_speed_75_100, distance_in_speed_100_125,
              distance_in_speed_over_125 + distance_meters}
@@ -203,11 +203,11 @@ defmodule InfinibirdService.RideDataExtractors do
       hour when hour < 13 -> "midday"
       hour when hour < 18 -> "afternoon"
       hour when hour < 23 -> "evening"
-      hour -> "night"
+      _hour -> "night"
     end
   end
 
-  def get_month_of_year do
+  def get_month_of_year(ride) do
     date =
       List.first(ride)
       |> get_in(["timeRange", "beginning"])
@@ -240,7 +240,7 @@ defmodule InfinibirdService.RideDataExtractors do
       month when month < 6 -> "spring"
       month when month < 9 -> "summer"
       month when month < 12 -> "autumn"
-      month -> "winter"
+      _month -> "winter"
     end
   end
 

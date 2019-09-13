@@ -36,7 +36,8 @@ defmodule InfinibirdService.MixProject do
       {:jason, "~> 1.0"},
       {:distance, "~> 0.2.2"},
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:argon2_elixir, "~> 2.0"}
     ]
   end
 end
