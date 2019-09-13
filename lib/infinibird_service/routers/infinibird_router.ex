@@ -32,18 +32,16 @@ defmodule InfinibirdService.InfinibirdRouter do
   end
 
   post "/authorise" do
-    IO.inspect(conn.body_params)
-
     case AuthService.authorise_user(conn.body_params) do
       %{authorised: false} ->
         conn
         |> put_resp_content_type("application/json")
         |> send_resp(200, ~s[{"authorised": false}])
 
-      %{authorised: true} ->
+      %{authorised: true, device_id: device_id} ->
         conn
         |> put_resp_content_type("application/json")
-        |> send_resp(200, ~s[{"authorised": true}])
+        |> send_resp(200, ~s[{"authorised": true, "device_id": "#{device_id}"}])
     end
   end
 

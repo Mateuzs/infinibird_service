@@ -37,7 +37,7 @@ defmodule InfinibirdService.RideHandler do
 
     IO.inspect(distance_meters)
 
-    ride_metrics_id =
+    {:ok, inserted} =
       Repo.insert(
         %RideMetrics{
           device_id: device_id,
@@ -61,24 +61,27 @@ defmodule InfinibirdService.RideHandler do
         returning: [:ride_metrics_id]
       )
 
+    ride_metrics_id = inserted.ride_metrics_id
+
     Repo.insert(%RideTimeCharacteristics{
       ride_metrics_id: ride_metrics_id,
-      date: date,
-      time: time,
+      date: Date.from_iso8601!(date),
+      time: Time.from_iso8601!(time),
       day: day_of_week,
       month: month_of_year,
       time_of_day: time_of_day,
       season: season
     })
-
-    IO.inspect(ride_metrics_id)
   end
 
   def get_user_rides_data(device_id) do
     ride_files =
-      Path.expand("./lib/rides/#{device_id}/maneuvers/")
-      |> Path.absname()
-      |> File.ls!()
+      case Path.expand("./lib/rides/#{device_id}/maneuvers/")
+           |> Path.absname()
+           |> File.ls() do
+        {:ok, ride_files} -> ride_files
+        {:error, _err} -> []
+      end
 
     rides =
       Enum.map(ride_files, fn ride_file ->

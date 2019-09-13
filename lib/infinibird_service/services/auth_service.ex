@@ -5,9 +5,9 @@ defmodule InfinibirdService.AuthService do
   def authorise_user(params) do
     password = params["password"]
 
-    case Repo.exists?(from(u in User, where: u.password == ^password)) do
-      true -> %{authorised: true}
-      false -> %{authorised: false}
+    case Repo.get_by(User, password: password) do
+      nil -> %{authorised: false}
+      record -> %{authorised: true, device_id: record.device_id}
     end
   end
 end

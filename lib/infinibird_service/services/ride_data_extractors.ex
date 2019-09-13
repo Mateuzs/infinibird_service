@@ -177,6 +177,11 @@ defmodule InfinibirdService.RideDataExtractors do
     day_of_week =
       List.first(ride)
       |> get_in(["timeRange", "beginning"])
+      |> String.split(".")
+      |> List.first()
+      |> String.replace("T", " ")
+      |> String.split(" ")
+      |> List.first()
       |> Date.from_iso8601!()
       |> Date.day_of_week()
 
@@ -195,6 +200,11 @@ defmodule InfinibirdService.RideDataExtractors do
     time =
       List.first(ride)
       |> get_in(["timeRange", "beginning"])
+      |> String.split(".")
+      |> List.first()
+      |> String.replace("T", " ")
+      |> String.split(" ")
+      |> List.last()
       |> Time.from_iso8601!()
 
     case time.hour do
@@ -211,6 +221,11 @@ defmodule InfinibirdService.RideDataExtractors do
     date =
       List.first(ride)
       |> get_in(["timeRange", "beginning"])
+      |> String.split(".")
+      |> List.first()
+      |> String.replace("T", " ")
+      |> String.split(" ")
+      |> List.first()
       |> Date.from_iso8601!()
 
     case date.month do
@@ -233,6 +248,11 @@ defmodule InfinibirdService.RideDataExtractors do
     date =
       List.first(ride)
       |> get_in(["timeRange", "beginning"])
+      |> String.split(".")
+      |> List.first()
+      |> String.replace("T", " ")
+      |> String.split(" ")
+      |> List.first()
       |> Date.from_iso8601!()
 
     case date.month do
