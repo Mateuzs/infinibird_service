@@ -39,7 +39,7 @@ defmodule InfinibirdService.RideDataExtractors do
     points
     |> Enum.map(fn list -> {Keyword.get(list, :lon), Keyword.get(list, :lat)} end)
     |> Distance.GreatCircle.distance()
-    |> Kernel.trunc()
+    |> Kernel.round()
   end
 
   def count_travel_time_minutes(ride) do
@@ -56,7 +56,7 @@ defmodule InfinibirdService.RideDataExtractors do
        |> elem(1),
        :second
      ) / 60)
-    |> Kernel.trunc()
+    |> Kernel.round()
   end
 
   def count_decelerations(ride) do
@@ -100,7 +100,7 @@ defmodule InfinibirdService.RideDataExtractors do
   def get_avg_speed_kmh(distance_meters, travel_time_minutes) do
     case travel_time_minutes do
       0 -> 0
-      _more_than_0 -> (distance_meters / 1000 / (travel_time_minutes / 60)) |> Kernel.trunc()
+      _more_than_0 -> (distance_meters / 1000 / (travel_time_minutes / 60)) |> Kernel.round()
     end
   end
 
@@ -108,27 +108,28 @@ defmodule InfinibirdService.RideDataExtractors do
     Enum.filter(ride, fn maneuver ->
       Map.get(maneuver, "beginningGpsPosition") !== nil
     end)
+    |> Enum.chunk_every(2, 1, :discard)
     |> Enum.reduce(
       {0, 0, 0, 0, 0, 0},
-      fn maneuver,
+      fn [beginning_man, ending_man],
          {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
           distance_in_speed_75_100, distance_in_speed_100_125, distance_in_speed_over_125} ->
-        beginning_time = get_in(maneuver, ["beginningGpsPosition", "timestamp"])
-        end_time = get_in(maneuver, ["endGpsPosition", "timestamp"])
+        start_time = get_in(beginning_man, ["beginningGpsPosition", "timestamp"])
+        end_time = get_in(ending_man, ["beginningGpsPosition", "timestamp"])
 
         seconds =
           DateTime.diff(
             DateTime.from_iso8601(end_time) |> elem(1),
-            DateTime.from_iso8601(beginning_time) |> elem(1),
+            DateTime.from_iso8601(start_time) |> elem(1),
             :second
           )
 
         distance_meters =
           [
-            {get_in(maneuver, ["beginningGpsPosition", "longitude"]),
-             get_in(maneuver, ["beginningGpsPosition", "latitude"])},
-            {get_in(maneuver, ["endGpsPosition", "longitude"]),
-             get_in(maneuver, ["endGpsPosition", "latitude"])}
+            {get_in(beginning_man, ["beginningGpsPosition", "longitude"]),
+             get_in(beginning_man, ["beginningGpsPosition", "latitude"])},
+            {get_in(ending_man, ["beginningGpsPosition", "longitude"]),
+             get_in(ending_man, ["beginningGpsPosition", "latitude"])}
           ]
           |> Distance.GreatCircle.distance()
 

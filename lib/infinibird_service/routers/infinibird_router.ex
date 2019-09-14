@@ -15,12 +15,12 @@ defmodule InfinibirdService.InfinibirdRouter do
   plug(:match)
   plug(:dispatch)
 
-  get "/summary" do
-    data = RideHandler.get_summary_data()
+  get "/rides_metrics/:deviceId" do
+    data = RideHandler.get_summary_data(deviceId)
 
     conn
-    |> put_resp_content_type("application/bson")
-    |> send_resp(200, Bson.encode(data))
+    |> put_resp_content_type("application/json")
+    |> send_resp(200, Jason.encode!(data))
   end
 
   get "/trips/:deviceId" do

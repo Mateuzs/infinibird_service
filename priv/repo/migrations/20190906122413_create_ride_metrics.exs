@@ -11,7 +11,7 @@ defmodule Infinibird.Repo.Migrations.CreateRideMetrics do
         null: false
       )
 
-      add(:tavel_time_minutes, :integer, null: false)
+      add(:travel_time_minutes, :integer, null: false)
       add(:max_speed_kmh, :integer, null: false)
       add(:avg_speed_kmh, :integer, null: false)
       add(:accelerations, :integer, null: false)
@@ -19,13 +19,13 @@ defmodule Infinibird.Repo.Migrations.CreateRideMetrics do
       add(:stoppings, :integer, null: false)
       add(:right_turns, :integer, null: false)
       add(:left_turns, :integer, null: false)
-      add(:distance_kmh, :integer, null: false)
-      add(:distance_on_speed_below_25_kmh, :integer, null: false)
-      add(:distance_on_speed_between_25_and_50_kmh, :integer, null: false)
-      add(:distance_on_speed_between_50_and_75_kmh, :integer, null: false)
-      add(:distance_on_speed_between_75_and_100_kmh, :integer, null: false)
-      add(:distance_on_speed_between_100_and_125_kmh, :integer, null: false)
-      add(:distance_on_speed_over_125_kmh, :integer, null: false)
+      add(:distance_m, :integer, null: false)
+      add(:distance_m_speed_below_25_kmh, :integer, null: false)
+      add(:distance_m_speed_25_50_kmh, :integer, null: false)
+      add(:distance_m_speed_50_75_kmh, :integer, null: false)
+      add(:distance_m_speed_75_100_kmh, :integer, null: false)
+      add(:distance_m_speed_100_125_kmh, :integer, null: false)
+      add(:distance_m_speed_over_125_kmh, :integer, null: false)
     end
 
     create(index("ride_metrics", :device_id))

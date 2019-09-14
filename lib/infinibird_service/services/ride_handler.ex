@@ -14,7 +14,7 @@ defmodule InfinibirdService.RideHandler do
     left_turns = RideDataExtractors.count_left_turns(ride)
     right_turns = RideDataExtractors.count_right_turns(ride)
     travel_time_minutes = RideDataExtractors.count_travel_time_minutes(ride)
-    max_speed_kmh = Kernel.trunc(RideDataExtractors.find_max_speed(ride) * 3.6)
+    max_speed_kmh = Kernel.round(RideDataExtractors.find_max_speed(ride) * 3.6)
     points = RideDataExtractors.extract_travel_points(ride)
     distance_meters = RideDataExtractors.count_distance_meters(points)
     avg_speed_kmh = RideDataExtractors.get_avg_speed_kmh(distance_meters, travel_time_minutes)
@@ -29,19 +29,11 @@ defmodule InfinibirdService.RideHandler do
     time_of_day = RideDataExtractors.get_time_of_day(ride)
     season = RideDataExtractors.get_season(ride)
 
-    # debugging purposes
-    IO.inspect(
-      {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
-       distance_in_speed_75_100, distance_in_speed_100_125, distance_in_speed_over_125}
-    )
-
-    IO.inspect(distance_meters)
-
     {:ok, inserted} =
       Repo.insert(
         %RideMetrics{
           device_id: device_id,
-          tavel_time_minutes: travel_time_minutes,
+          travel_time_minutes: travel_time_minutes,
           max_speed_kmh: max_speed_kmh,
           avg_speed_kmh: avg_speed_kmh,
           accelerations: accelerations,
@@ -49,14 +41,13 @@ defmodule InfinibirdService.RideHandler do
           stoppings: stoppings,
           right_turns: right_turns,
           left_turns: left_turns,
-          distance_kmh: Kernel.trunc(distance_meters / 1000),
-          distance_on_speed_below_25_kmh: Kernel.trunc(distance_in_speed_0_25 / 1000),
-          distance_on_speed_between_25_and_50_kmh: Kernel.trunc(distance_in_speed_25_50 / 1000),
-          distance_on_speed_between_50_and_75_kmh: Kernel.trunc(distance_in_speed_50_75 / 1000),
-          distance_on_speed_between_75_and_100_kmh: Kernel.trunc(distance_in_speed_75_100 / 1000),
-          distance_on_speed_between_100_and_125_kmh:
-            Kernel.trunc(distance_in_speed_100_125 / 1000),
-          distance_on_speed_over_125_kmh: Kernel.trunc(distance_in_speed_over_125 / 1000)
+          distance_m: distance_meters,
+          distance_m_speed_below_25_kmh: Kernel.round(distance_in_speed_0_25),
+          distance_m_speed_25_50_kmh: Kernel.round(distance_in_speed_25_50),
+          distance_m_speed_50_75_kmh: Kernel.round(distance_in_speed_50_75),
+          distance_m_speed_75_100_kmh: Kernel.round(distance_in_speed_75_100),
+          distance_m_speed_100_125_kmh: Kernel.round(distance_in_speed_100_125),
+          distance_m_speed_over_125_kmh: Kernel.round(distance_in_speed_over_125)
         },
         returning: [:ride_metrics_id]
       )
@@ -118,10 +109,42 @@ defmodule InfinibirdService.RideHandler do
     rides
   end
 
-  def get_summary_data() do
-    summary = DataProvider.get_summary_mock_data()
+  def get_summary_data(device_id) do
+    q =
+      from(rd in "ride_metrics",
+        join: rts in "ride_time_characteristics",
+        on: rd.ride_metrics_id == rts.ride_metrics_id,
+        where: rd.device_id == ^device_id,
+        order_by: [rts.date, rts.time],
+        select: %{
+          travel_time_minutes: rd.travel_time_minutes,
+          max_speed_kmh: rd.max_speed_kmh,
+          avg_speed_kmh: rd.avg_speed_kmh,
+          accelerations: rd.accelerations,
+          decelerations: rd.decelerations,
+          stoppings: rd.stoppings,
+          right_turns: rd.right_turns,
+          left_turns: rd.left_turns,
+          distance_m: rd.distance_m,
+          distance_m_speed_below_25_kmh: rd.distance_m_speed_below_25_kmh,
+          distance_m_speed_25_50_kmh: rd.distance_m_speed_25_50_kmh,
+          distance_m_speed_50_75_kmh: rd.distance_m_speed_50_75_kmh,
+          distance_m_speed_75_100_kmh: rd.distance_m_speed_75_100_kmh,
+          distance_m_speed_100_125_kmh: rd.distance_m_speed_100_125_kmh,
+          distance_m_speed_over_125_kmh: rd.distance_m_speed_over_125_kmh,
+          date: rts.date,
+          time: rts.time,
+          day: rts.day,
+          month: rts.month,
+          time_of_day: rts.time_of_day,
+          season: rts.season
+        }
+      )
+
+    rides_data = Repo.all(q)
+
     charts = DataProvider.get_chart_mock_data()
 
-    %{charts: charts, summary: summary}
+    %{charts: charts, rides_data: rides_data}
   end
 end
