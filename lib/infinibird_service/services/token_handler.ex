@@ -1,6 +1,22 @@
-defmodule InfinibirdService.TangoController do
-  def handle_new_trip(device_id) do
-    generate_token(device_id)
+defmodule InfinibirdService.TokenHandler do
+  import Ecto.Query
+  alias InfinibirdDB.{User, Repo}
+
+  def handle_token(device_id) do
+    user =
+      from(User, where: [device_id: ^device_id])
+      |> Repo.one()
+
+    case user do
+      nil ->
+        token = generate_token(device_id)
+        Repo.insert(%User{device_id: device_id, token: token, password: hash_token(token)})
+
+        token
+
+      _not_nil ->
+        user.token
+    end
   end
 
   defp generate_token(device_id) do
@@ -33,6 +49,11 @@ defmodule InfinibirdService.TangoController do
   end
 
   defp check_token_existence(token) do
-    Enum.find(["7e8a31fa"], nil, fn x -> x === token end)
+    from(User) |> Repo.all() |> Enum.find(nil, fn user -> user.token === token end)
+  end
+
+  defp hash_token(token) do
+    [argon_salt: argon_salt] = Application.get_env(:infinibird_service, :argon)
+    Argon2.Base.hash_password(token, argon_salt, format: :raw_hash)
   end
 end
