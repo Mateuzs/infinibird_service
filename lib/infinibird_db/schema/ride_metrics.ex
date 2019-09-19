@@ -7,6 +7,7 @@ defmodule InfinibirdDB.RideMetrics do
     field(:travel_time_minutes, :integer)
     field(:max_speed_kmh, :integer)
     field(:avg_speed_kmh, :integer)
+    field(:max_acceleration, :float)
     field(:accelerations, :integer)
     field(:decelerations, :integer)
     field(:stoppings, :integer)

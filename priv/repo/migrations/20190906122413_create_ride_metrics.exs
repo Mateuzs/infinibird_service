@@ -14,6 +14,7 @@ defmodule Infinibird.Repo.Migrations.CreateRideMetrics do
       add(:travel_time_minutes, :integer, null: false)
       add(:max_speed_kmh, :integer, null: false)
       add(:avg_speed_kmh, :integer, null: false)
+      add(:max_acceleration, :float, null: false)
       add(:accelerations, :integer, null: false)
       add(:decelerations, :integer, null: false)
       add(:stoppings, :integer, null: false)

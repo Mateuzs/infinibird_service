@@ -104,6 +104,26 @@ defmodule InfinibirdService.RideDataExtractors do
     end
   end
 
+  def count_max_acceleration(ride) do
+    ride
+    |> Enum.filter(fn e ->
+      e["maneuverType"] === "acceleration"
+    end)
+    |> Enum.reduce(0, fn e, acc ->
+      v1 = get_in(e, ["beginningGpsPosition", "speedInMps"])
+      t1 = get_in(e, ["beginningGpsPosition", "locationFixTimeInMs"])
+      v2 = get_in(e, ["endGpsPosition", "speedInMps"])
+      t2 = get_in(e, ["endGpsPosition", "locationFixTimeInMs"])
+
+      a = ((v2 - v1) / ((t2 - t1) / 1000)) |> Float.round(2)
+
+      case a do
+        a when a >= acc -> a
+        a when a < acc -> acc
+      end
+    end)
+  end
+
   def count_speed_profile(ride) do
     Enum.filter(ride, fn maneuver ->
       Map.get(maneuver, "beginningGpsPosition") !== nil

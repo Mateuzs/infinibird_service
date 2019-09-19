@@ -18,6 +18,7 @@ defmodule InfinibirdService.RideHandler do
     points = RideDataExtractors.extract_travel_points(ride)
     distance_meters = RideDataExtractors.count_distance_meters(points)
     avg_speed_kmh = RideDataExtractors.get_avg_speed_kmh(distance_meters, travel_time_minutes)
+    max_acceleration = RideDataExtractors.count_max_acceleration(ride)
 
     {distance_in_speed_0_25, distance_in_speed_25_50, distance_in_speed_50_75,
      distance_in_speed_75_100, distance_in_speed_100_125,
@@ -36,6 +37,7 @@ defmodule InfinibirdService.RideHandler do
           travel_time_minutes: travel_time_minutes,
           max_speed_kmh: max_speed_kmh,
           avg_speed_kmh: avg_speed_kmh,
+          max_acceleration: max_acceleration,
           accelerations: accelerations,
           decelerations: decelerations,
           stoppings: stoppings,
@@ -120,6 +122,7 @@ defmodule InfinibirdService.RideHandler do
           travel_time_minutes: rd.travel_time_minutes,
           max_speed_kmh: rd.max_speed_kmh,
           avg_speed_kmh: rd.avg_speed_kmh,
+          max_acceleration_ms: rd.max_acceleration,
           accelerations: rd.accelerations,
           decelerations: rd.decelerations,
           stoppings: rd.stoppings,
