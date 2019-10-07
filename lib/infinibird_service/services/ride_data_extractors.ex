@@ -30,7 +30,8 @@ defmodule InfinibirdService.RideDataExtractors do
         lon: get_in(maneuver, ["beginningGpsPosition", "longitude"]),
         alt: get_in(maneuver, ["beginningGpsPosition", "altitude"]),
         mps: get_in(maneuver, ["beginningGpsPosition", "speedInMps"]),
-        tim: extract_time(get_in(maneuver, ["beginningGpsPosition", "timestamp"]))
+        tim: extract_time(get_in(maneuver, ["beginningGpsPosition", "timestamp"])),
+        man_type: Map.get(maneuver, "maneuverType")
       ]
     end)
   end
