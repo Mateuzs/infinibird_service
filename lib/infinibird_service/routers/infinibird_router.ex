@@ -32,7 +32,9 @@ defmodule InfinibirdService.InfinibirdRouter do
   end
 
   post "/authorise" do
-    case AuthService.authorise_user(conn.body_params) do
+    password = conn.body_params["password"]
+
+    case AuthService.authorise_user(password) do
       %{authorised: false} ->
         conn
         |> put_resp_content_type("application/json")

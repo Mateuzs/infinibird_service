@@ -19,3 +19,11 @@ config :logger, level: :info
 
 config :infinibird_service, InfinibirdService.Endpoint,
   force_ssl: [rewrite_on: [:x_forwarded_proto], hsts: true, host: nil]
+
+# DB config
+config :infinibird_service, InfinibirdDB.Repo,
+  username: "infinibird",
+  password: "infinibird",
+  database: "infinibird_db",
+  hostname: "localhost",
+  pool_size: 10

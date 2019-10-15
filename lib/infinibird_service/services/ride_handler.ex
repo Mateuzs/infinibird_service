@@ -1,7 +1,7 @@
 defmodule InfinibirdService.RideHandler do
   import Ecto.Query
   alias InfinibirdDB.{RideMetrics, RideTimeCharacteristics, Repo}
-  alias InfinibirdService.{RideDataExtractors, DataProvider}
+  alias InfinibirdService.{RideDataExtractors}
 
   def process_new_ride(device_id, ride_id) do
     # Ride Metrics
@@ -146,8 +146,6 @@ defmodule InfinibirdService.RideHandler do
 
     rides_data = Repo.all(q)
 
-    charts = DataProvider.get_chart_mock_data()
-
-    %{charts: charts, rides_data: rides_data}
+    rides_data
   end
 end
