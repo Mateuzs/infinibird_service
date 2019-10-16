@@ -22,8 +22,8 @@ config :infinibird_service, InfinibirdService.Endpoint,
 
 # DB config
 config :infinibird_service, InfinibirdDB.Repo,
-  username: "infinibird",
-  password: "infinibird",
-  database: "infinibird_db",
-  hostname: "localhost",
+  username: "b0ca5494-639d-4076-9597-fadfdffe61d8-user",
+  password: "pw-75c51fb8-61f6-4815-af31-57f841ccb809@postgres-free-tier-1",
+  database: "b0ca5494-639d-4076-9597-fadfdffe61d8",
+  hostname: "gigalixir.com",
   pool_size: 10
