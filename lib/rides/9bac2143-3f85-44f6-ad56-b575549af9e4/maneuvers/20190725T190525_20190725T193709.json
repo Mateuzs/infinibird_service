@@ -2,8 +2,8 @@
   {
     "maneuverType": "rideEvent",
     "timeRange": {
-      "beginning": "2019-07-25T19:05:20.247+02:00",
-      "end": "2019-07-25T19:05:20.247+02:00"
+      "beginning": "2019-10-14T19:05:20.247+02:00",
+      "end": "2019-10-15T19:05:20.247+02:00"
     },
     "rideEvent": "START",
     "version": 1
@@ -17316,8 +17316,8 @@
   {
     "maneuverType": "activity",
     "timeRange": {
-      "beginning": "2019-07-25T19:37:39.092+02:00",
-      "end": "2019-07-25T19:37:39.092+02:00"
+      "beginning": "2019-10-14T19:37:39.092+02:00",
+      "end": "2019-10-14T19:37:39.092+02:00"
     },
     "beginningGpsPosition": {
       "timestamp": "2019-07-25T19:32:43.151+02:00",

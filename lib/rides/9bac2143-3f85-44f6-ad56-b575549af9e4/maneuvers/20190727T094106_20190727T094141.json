@@ -2,8 +2,8 @@
   {
     "maneuverType": "rideEvent",
     "timeRange": {
-      "beginning": "2019-07-27T09:41:16.512+02:00",
-      "end": "2019-07-27T09:41:16.512+02:00"
+      "beginning": "2019-10-11T09:41:16.512+02:00",
+      "end": "2019-10-14T09:41:16.512+02:00"
     },
     "rideEvent": "START",
     "version": 1
@@ -470,8 +470,8 @@
   {
     "maneuverType": "deceleration",
     "timeRange": {
-      "beginning": "2019-07-27T09:41:53.053+02:00",
-      "end": "2019-07-27T09:41:56.419+02:00"
+      "beginning": "2019-10-11T09:41:53.053+02:00",
+      "end": "2019-10-11T09:41:56.419+02:00"
     },
     "beginningGpsPosition": {
       "timestamp": "2019-07-27T09:41:53.053+02:00",
