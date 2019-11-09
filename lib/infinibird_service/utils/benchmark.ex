@@ -1,8 +1,10 @@
 defmodule InfinibirdService.Benchmark do
-  def measure(function) do
+  @spec measure(fun, [any]) :: float
+  def measure(function, params) do
     function
-      |> :timer.tc()
-      |> elem(0)
-      |> Kernel./(1_000_000)
+    |> :timer.tc(params)
+    |> elem(0)
+    |> Kernel./(1_000_000)
   end
 end
+

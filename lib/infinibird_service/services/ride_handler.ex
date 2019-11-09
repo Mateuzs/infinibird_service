@@ -3,6 +3,7 @@ defmodule InfinibirdService.RideHandler do
   alias InfinibirdDB.{RideMetrics, RideTimeCharacteristics, Repo}
   alias InfinibirdService.{RideDataExtractors}
 
+  @spec process_new_ride(any, any) :: any
   def process_new_ride(device_id, ride_id) do
     # Ride Metrics
     ride = RideDataExtractors.extract_ride(device_id, ride_id)
@@ -67,6 +68,7 @@ defmodule InfinibirdService.RideHandler do
     })
   end
 
+  @spec get_user_rides_data(any) :: [any]
   def get_user_rides_data(device_id) do
     ride_files =
       case Path.expand("./lib/rides/#{device_id}/maneuvers/")

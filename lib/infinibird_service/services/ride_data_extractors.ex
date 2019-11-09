@@ -1,4 +1,5 @@
 defmodule InfinibirdService.RideDataExtractors do
+  @spec extract_ride(any, any) :: any
   def extract_ride(device_id, ride_file) do
     Path.expand("./lib/rides/#{device_id}/maneuvers/#{ride_file}")
     |> Path.absname()
@@ -6,6 +7,7 @@ defmodule InfinibirdService.RideDataExtractors do
     |> Jason.decode!()
   end
 
+  @spec extract_start_time([any]) :: String.t()
   def extract_start_time(ride) do
     List.first(ride)
     |> get_in(["timeRange", "beginning"])
@@ -14,6 +16,7 @@ defmodule InfinibirdService.RideDataExtractors do
     |> String.replace("T", " ")
   end
 
+  @spec extract_end_time([any]) :: String.t()
   def extract_end_time(ride) do
     List.last(ride)
     |> get_in(["timeRange", "end"])
@@ -22,6 +25,7 @@ defmodule InfinibirdService.RideDataExtractors do
     |> String.replace("T", " ")
   end
 
+  @spec extract_travel_points(any) :: [any]
   def extract_travel_points(ride) do
     Enum.filter(ride, fn maneuver -> Map.get(maneuver, "beginningGpsPosition") !== nil end)
     |> Enum.map(fn maneuver ->
@@ -36,6 +40,7 @@ defmodule InfinibirdService.RideDataExtractors do
     end)
   end
 
+  @spec count_distance_meters(any) :: integer
   def count_distance_meters(points) do
     points
     |> Enum.map(fn list -> {Keyword.get(list, :lon), Keyword.get(list, :lat)} end)
@@ -43,6 +48,7 @@ defmodule InfinibirdService.RideDataExtractors do
     |> Kernel.round()
   end
 
+  @spec count_travel_time_minutes([any]) :: integer
   def count_travel_time_minutes(ride) do
     (DateTime.diff(
        DateTime.from_iso8601(
@@ -60,6 +66,7 @@ defmodule InfinibirdService.RideDataExtractors do
     |> Kernel.round()
   end
 
+  @spec count_decelerations(any) :: non_neg_integer
   def count_decelerations(ride) do
     ride
     |> Enum.count(fn e ->
@@ -68,6 +75,7 @@ defmodule InfinibirdService.RideDataExtractors do
     end)
   end
 
+  @spec count_accelerations(any) :: non_neg_integer
   def count_accelerations(ride) do
     ride
     |> Enum.count(fn e ->
@@ -76,28 +84,39 @@ defmodule InfinibirdService.RideDataExtractors do
     end)
   end
 
+  @spec count_stoppings(any) :: non_neg_integer
   def count_stoppings(ride) do
     ride
     |> Enum.count(fn e -> e["maneuverType"] === "stopping" end)
   end
 
+  @spec count_left_turns(any) :: non_neg_integer
   def count_left_turns(ride) do
     ride
     |> Enum.count(fn e -> e["maneuverType"] === "leftTurn" end)
   end
 
+  @spec count_right_turns(any) :: non_neg_integer
   def count_right_turns(ride) do
     ride
     |> Enum.count(fn e -> e["maneuverType"] === "rightTurn" end)
   end
 
+  @spec find_max_speed(any) :: float
   def find_max_speed(ride) do
     ride
     |> Enum.filter(fn maneuver -> Map.get(maneuver, "beginningGpsPosition") !== nil end)
-    |> Enum.max_by(fn e -> get_in(e, ["beginningGpsPosition", "speedInMps"]) end)
-    |> get_in(["beginningGpsPosition", "speedInMps"])
+    |> Enum.reduce(0, fn e, acc ->
+      Enum.max([
+        acc,
+        get_in(e, ["beginningGpsPosition", "speedInMps"]),
+        get_in(e, ["endGpsPosition", "speedInMps"]),
+        Map.get(e, "maxSpeedInMps", 0)
+      ])
+    end)
   end
 
+  @spec get_avg_speed_kmh(any, number) :: integer
   def get_avg_speed_kmh(distance_meters, travel_time_minutes) do
     case travel_time_minutes do
       0 -> 0
@@ -105,6 +124,7 @@ defmodule InfinibirdService.RideDataExtractors do
     end
   end
 
+  @spec count_max_acceleration(any) :: float
   def count_max_acceleration(ride) do
     ride
     |> Enum.filter(fn e ->
@@ -125,6 +145,7 @@ defmodule InfinibirdService.RideDataExtractors do
     end)
   end
 
+  @spec count_speed_profile(any) :: any
   def count_speed_profile(ride) do
     Enum.filter(ride, fn maneuver ->
       Map.get(maneuver, "beginningGpsPosition") !== nil
@@ -195,6 +216,7 @@ defmodule InfinibirdService.RideDataExtractors do
     )
   end
 
+  @spec get_day_of_week([any]) :: String.t()
   def get_day_of_week(ride) do
     day_of_week =
       List.first(ride)
@@ -218,6 +240,7 @@ defmodule InfinibirdService.RideDataExtractors do
     end
   end
 
+  @spec get_time_of_day([any]) :: String.t()
   def get_time_of_day(ride) do
     time =
       List.first(ride)
@@ -239,6 +262,7 @@ defmodule InfinibirdService.RideDataExtractors do
     end
   end
 
+  @spec get_month_of_year([any]) :: String.t()
   def get_month_of_year(ride) do
     date =
       List.first(ride)
@@ -266,6 +290,7 @@ defmodule InfinibirdService.RideDataExtractors do
     end
   end
 
+  @spec get_season([any]) :: String.t()
   def get_season(ride) do
     date =
       List.first(ride)

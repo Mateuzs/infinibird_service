@@ -2,6 +2,7 @@ defmodule InfinibirdService.TokenHandler do
   import Ecto.Query
   alias InfinibirdDB.{User, Repo}
 
+  @spec handle_token(String.t()) :: String.t()
   def handle_token(device_id) do
     user =
       from(User, where: [device_id: ^device_id])
