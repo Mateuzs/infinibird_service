@@ -32,14 +32,16 @@ defmodule InfinibirdService.InfinibirdRouter do
 
     chunked_conn =
       conn
-      |> put_resp_content_type("text/bson")
+      |> put_resp_content_type("application/bson")
       |> send_chunked(200)
 
     Enum.each(data, fn chunk ->
       rides_chunk = RideHandler.get_user_rides_data(deviceId, chunk)
 
+      data = Bson.encode(rides_chunk) |> Bson.decode() |> Bson.encode()
+
       chunked_conn
-      |> chunk(Bson.encode(rides_chunk))
+      |> chunk(data)
     end)
 
     chunked_conn
