@@ -37,7 +37,10 @@ defmodule InfinibirdService.InfinibirdRouter do
 
     Enum.each(data, fn chunk ->
       rides_chunk = RideHandler.get_user_rides_data(deviceId, chunk)
-      chunked_conn |> chunk(Bson.encode(rides_chunk))
+
+      chunked_conn
+      |> put_resp_content_type("application/bson")
+      |> chunk(Bson.encode(rides_chunk))
     end)
 
     chunked_conn
