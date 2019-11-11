@@ -32,7 +32,7 @@ defmodule InfinibirdService.InfinibirdRouter do
 
     chunked_conn =
       conn
-      |> put_resp_content_type("application/bson")
+      |> put_resp_content_type("application/bson; charset=utf-8")
       |> send_chunked(200)
 
     Enum.each(data, fn chunk ->
