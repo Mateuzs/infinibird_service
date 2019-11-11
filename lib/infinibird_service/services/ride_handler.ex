@@ -68,16 +68,16 @@ defmodule InfinibirdService.RideHandler do
     })
   end
 
-  @spec get_user_rides_data(any) :: [any]
-  def get_user_rides_data(device_id) do
-    ride_files =
-      case Path.expand("./lib/rides/#{device_id}/maneuvers/")
-           |> Path.absname()
-           |> File.ls() do
-        {:ok, ride_files} -> ride_files
-        {:error, _err} -> []
-      end
+  def get_user_ride_file_names(device_id) do
+    case Path.expand("./lib/rides/#{device_id}/maneuvers/")
+         |> Path.absname()
+         |> File.ls() do
+      {:ok, ride_files} -> ride_files
+      {:error, _err} -> []
+    end
+  end
 
+  def get_user_rides_data(device_id, ride_files) do
     rides =
       Enum.map(ride_files, fn ride_file ->
         ride = RideDataExtractors.extract_ride(device_id, ride_file)
@@ -93,7 +93,7 @@ defmodule InfinibirdService.RideHandler do
         max_speed = RideDataExtractors.find_max_speed(ride)
         distance_meters = RideDataExtractors.count_distance_meters(points)
 
-        {:"ride#{Enum.find_index(ride_files, &(&1 === ride_file))}",
+        {:"#{ride_file}",
          %{
            name: start_time,
            distance_meters: distance_meters,

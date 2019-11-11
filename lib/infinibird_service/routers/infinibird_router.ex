@@ -24,11 +24,22 @@ defmodule InfinibirdService.InfinibirdRouter do
   end
 
   get "/trips/:deviceId" do
-    data = RideHandler.get_user_rides_data(deviceId)
+    file_names = RideHandler.get_user_ride_file_names(deviceId)
 
-    conn
-    |> put_resp_content_type("application/bson")
-    |> send_resp(200, Bson.encode(data))
+    data =
+      file_names
+      |> Enum.chunk_every(10)
+
+    chunked_conn =
+      conn
+      |> send_chunked(200)
+
+    Enum.each(data, fn chunk ->
+      rides_chunk = RideHandler.get_user_rides_data(deviceId, chunk)
+      chunked_conn |> chunk(Bson.encode(rides_chunk))
+    end)
+
+    chunked_conn
   end
 
   post "/authorise" do
