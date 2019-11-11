@@ -39,7 +39,6 @@ defmodule InfinibirdService.InfinibirdRouter do
       rides_chunk = RideHandler.get_user_rides_data(deviceId, chunk)
 
       chunked_conn
-      |> put_resp_content_type("application/bson")
       |> chunk(Bson.encode(rides_chunk))
     end)
 
