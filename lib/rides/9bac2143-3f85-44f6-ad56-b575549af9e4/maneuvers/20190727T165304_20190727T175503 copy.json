@@ -2,7 +2,7 @@
   {
     "maneuverType": "rideEvent",
     "timeRange": {
-      "beginning": "2019-11-10T16:53:58.479+02:00",
+      "beginning": "2019-11-08T14:33:58.479+02:00",
       "end": "2019-07-27T16:53:58.479+02:00"
     },
     "rideEvent": "START",
@@ -44,7 +44,7 @@
       "latitude": 50.86093000000001,
       "longitude": 21.078296666666667,
       "altitude": 326.5,
-      "speedInMps": 2.257057, 
+      "speedInMps": 2.257057,
       "bearingInDeg": 175.33,
       "horizontalAccuracy": 2.7,
       "verticalAccuracy": 0.0,
@@ -27287,8 +27287,8 @@
   {
     "maneuverType": "stop",
     "timeRange": {
-      "beginning": "2019-11-10T17:55:03.03+02:00",
-      "end": "2019-11-10T17:55:18.031+02:00"
+      "beginning": "2019-11-08T15:35:03.03+02:00",
+      "end": "2019-11-08T17:55:18.031+02:00"
     },
     "beginningGpsPosition": {
       "timestamp": "2019-07-27T17:55:03.03+02:00",
