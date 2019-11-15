@@ -28,20 +28,18 @@ defmodule InfinibirdService.InfinibirdRouter do
 
     data =
       file_names
-      |> Enum.chunk_every(10)
+      |> Enum.chunk_every(1)
 
     chunked_conn =
       conn
-      |> put_resp_content_type("application/bson; charset=utf-8")
+      |> put_resp_content_type("application/json; charset=utf-8")
       |> send_chunked(200)
 
     Enum.each(data, fn chunk ->
       rides_chunk = RideHandler.get_user_rides_data(deviceId, chunk)
 
-      data = Bson.encode(rides_chunk) |> Bson.decode() |> Bson.encode()
-
       chunked_conn
-      |> chunk(data)
+      |> chunk(Jason.encode!(rides_chunk))
     end)
 
     chunked_conn

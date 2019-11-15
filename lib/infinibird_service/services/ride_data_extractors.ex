@@ -29,21 +29,21 @@ defmodule InfinibirdService.RideDataExtractors do
   def extract_travel_points(ride) do
     Enum.filter(ride, fn maneuver -> Map.get(maneuver, "beginningGpsPosition") !== nil end)
     |> Enum.map(fn maneuver ->
-      [
+      %{
         lat: get_in(maneuver, ["beginningGpsPosition", "latitude"]),
         lon: get_in(maneuver, ["beginningGpsPosition", "longitude"]),
         alt: get_in(maneuver, ["beginningGpsPosition", "altitude"]),
         mps: get_in(maneuver, ["beginningGpsPosition", "speedInMps"]),
         tim: extract_time(get_in(maneuver, ["beginningGpsPosition", "timestamp"])),
         man_type: Map.get(maneuver, "maneuverType")
-      ]
+      }
     end)
   end
 
   @spec count_distance_meters(any) :: integer
   def count_distance_meters(points) do
     points
-    |> Enum.map(fn list -> {Keyword.get(list, :lon), Keyword.get(list, :lat)} end)
+    |> Enum.map(fn e -> {e.lon, e.lat} end)
     |> Distance.GreatCircle.distance()
     |> Kernel.round()
   end

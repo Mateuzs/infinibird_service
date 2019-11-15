@@ -93,21 +93,22 @@ defmodule InfinibirdService.RideHandler do
         max_speed = RideDataExtractors.find_max_speed(ride)
         distance_meters = RideDataExtractors.count_distance_meters(points)
 
-        {:"#{ride_file}",
-         %{
-           name: start_time,
-           distance_meters: distance_meters,
-           travel_time_minutes: travel_time_minutes,
-           start_time: start_time,
-           end_time: end_time,
-           points: points,
-           deceleration_amount: deceleration_amount,
-           acceleration_amount: acceleration_amount,
-           stoppings_amount: stoppings_amount,
-           left_turns_amount: left_turns_amount,
-           right_turns_amount: right_turns_amount,
-           max_speed: max_speed
-         }}
+        %{
+          "#{ride_file}": %{
+            name: start_time,
+            distance_meters: distance_meters,
+            travel_time_minutes: travel_time_minutes,
+            start_time: start_time,
+            end_time: end_time,
+            points: points,
+            deceleration_amount: deceleration_amount,
+            acceleration_amount: acceleration_amount,
+            stoppings_amount: stoppings_amount,
+            left_turns_amount: left_turns_amount,
+            right_turns_amount: right_turns_amount,
+            max_speed: max_speed
+          }
+        }
       end)
 
     rides
