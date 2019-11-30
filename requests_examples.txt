@@ -1,0 +1,49 @@
+curl \
+-X POST "https://infinibird-service.gigalixirapp.com/tango/new-trip/" \
+-H "Content-Type: application/json" \
+-u c3VwZXJfc2VjcmV0X3VzZXI=:cGFzc3dvcmRfc3VwZXJfc2VjcmV0 \
+-d '{"deviceId":"9bac2143-3f85-44f6-ad56-b575549af9e4", "rideId":"20190725T190508_20190725T193610.json"}'
+
+
+curl \
+-X POST "https://infinibird-service.gigalixirapp.com/tango/new-trip/" \
+-H "Content-Type: application/json" \
+-u invalid_username:invalid_password \
+-d '{"deviceId":"9bac2143-3f85-44f6-ad56-b575549af9e4", "rideId":"20190725T190508_20190725T193610.json"}'
+
+
+curl \
+-X POST "https://infinibird-service.gigalixirapp.com/tango/new-trip/" \
+-H "Content-Type: application/json" \
+-u c3VwZXJfc2VjcmV0X3VzZXI=:cGFzc3dvcmRfc3VwZXJfc2VjcmV0 \
+-d '{"key1":"value1", "key2":"value2"}'
+
+
+curl \
+-X POST "https://infinibird-service.gigalixirapp.com/infinibird/authorise/" \
+-H "Content-Type: application/json" \
+-u c3VwZXJfc2VjcmV0X3VzZXI=:cGFzc3dvcmRfc3VwZXJfc2VjcmV0 \
+-d '{"password":"invalid_password"}'
+
+
+curl \
+-X POST "https://infinibird-service.gigalixirapp.com/infinibird/authorise/" \
+-H "Content-Type: application/json" \
+-u c3VwZXJfc2VjcmV0X3VzZXI=:cGFzc3dvcmRfc3VwZXJfc2VjcmV0 \
+-d '{"password":"014515fbf62a890d73802ef1262b008851ba7fb817c1fa5c289955b283705273"}'
+
+
+curl \
+-X GET "https://infinibird-service.gigalixirapp.com/infinibird/rides_metrics/9bac2143-3f85-44f6-ad56-b575549af9e4" \
+-H "Content-Type: application/json" \
+-u c3VwZXJfc2VjcmV0X3VzZXI=:cGFzc3dvcmRfc3VwZXJfc2VjcmV0
+
+
+curl \
+-X GET "https://infinibird-service.gigalixirapp.com/infinibird/trips/9bac2143-3f85-44f6-ad56-b575549af9e4" \
+-H "Content-Type: application/bson" \
+-H "Transfer-Encoding: chunked" \
+-u c3VwZXJfc2VjcmV0X3VzZXI=:cGFzc3dvcmRfc3VwZXJfc2VjcmV0
+
+
+
