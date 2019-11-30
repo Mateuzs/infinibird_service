@@ -19,6 +19,8 @@ The best way to see this application in action is to visit the website:
 
 And use the testing token: `549af9e4`
 
+To see the microservice is working, check the endpoint [`https://infinibird-service.gigalixirapp.com/health`](https://infinibird-service.gigalixirapp.com/health)
+
 ## Building local environment
 
 To start the app:
