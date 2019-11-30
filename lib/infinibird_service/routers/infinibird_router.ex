@@ -28,7 +28,7 @@ defmodule InfinibirdService.InfinibirdRouter do
 
     data =
       file_names
-      |> Enum.chunk_every(1)
+      |> Enum.chunk_every(10)
 
     chunked_conn =
       conn
